@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Ldap_Login
-Version: 1.3.1
+Version: auto
 Description: Allow piwigo authentication using LDAP
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
 Author: cccraig
@@ -17,7 +17,7 @@ if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 define('LDAP_LOGIN_ID',      basename(dirname(__FILE__)));
 define('LDAP_LOGIN_PATH' ,   PHPWG_PLUGINS_PATH . LDAP_LOGIN_ID . '/');
 define('LDAP_LOGIN_ADMIN',   get_root_url() . 'admin.php?page=plugin-' . LDAP_LOGIN_ID);
-define('LDAP_LOGIN_VERSION', '1.3');
+define('LDAP_LOGIN_VERSION', '1.3.1');
 
 include_once(LDAP_LOGIN_PATH.'/class.ldap.php');
 
