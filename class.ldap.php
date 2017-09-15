@@ -1,11 +1,10 @@
 <?php
 
 // Require the updated LDAP class
-require_once("adLDAP.php");
+include_once('include/adLDAP.php');
 
 // Define Global variable
 global $conf;
-
 
 
 /**
