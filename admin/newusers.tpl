@@ -6,18 +6,27 @@ label
     width: 250px;
     float: left;
 }
+
+.nice{
+    display: inline-block;
+    border-radius: 10px;
+    font-family: "arial-black";
+    font-size: 14px;
+    color: black;
+    padding: 4px 8px;
+}
+
 </style>
 {/literal}
 
 <div class="titrePage">
-	<h2>{'Ldap_Login Plugin'|@translate}</h2>
+	<h2>{'LDAP Login'|@translate}</h2>
 </div>
 
-<i>{"If the LDAP doesn't furnish the mail address, users can set it up in the profile page."|@translate}</i>
 <form method="post" action="{$PLUGIN_NEWUSERS}" class="general">
 
 <fieldset>
-	<legend>{'Ldap_Login configuration'|@translate}</legend>
+	<legend>{'LDAP Login Configuration'|@translate}</legend>
 	
     <p>
 	{if $ALLOW_NEWUSERS}
@@ -25,23 +34,16 @@ label
 	{else}
 		<input type="checkbox" id="allow_newusers" name="ALLOW_NEWUSERS" value="{$ALLOW_NEWUSERS}" />
 	{/if}
-	{'Do you allow new piwigo users to be created when users authenticate succesfully on the ldap ?'|@translate}
+	{'Do you want to allow new piwigo users to be created when they authenticate succesfully?'|@translate}
     </p>
-    
-    <p>
-		<b><label for="users_group">{'Users group'|@translate}</label></b>
-		<br>
-		{'Users members of this ldap group (e.g.: piwigo,users ... , default is void ) can authenticate on piwigo and are created if the option above is selected. If left blank, everyone can authenticate.'|@translate}
-		<input size="70" type="text" id="users_group" name="USERS_GROUP" value="{$USERS_GROUP}" />
-	</p>
-    
-    <p>
+
+<!--     <p>
 	{if $ADVERTISE_ADMINS}
 		<input type="checkbox" id="advertise_admin_new_ldapuser" name="ADVERTISE_ADMINS" value="{$ADVERTISE_ADMINS}" checked />
 	{else}
 		<input type="checkbox" id="advertise_admin_new_ldapuser" name="ADVERTISE_ADMINS" value="{$ADVERTISE_ADMINS}" />
 	{/if}
-	{'Do you want admins to be advertised by mail in case of new users creation upon ldap login ?'|@translate}
+	{'Do you want admins to be notified by mail when new users are created after ldap login?'|@translate}
     </p>
     
     <p>
@@ -50,12 +52,54 @@ label
 	{else}
 		<input type="checkbox" id="send_password_by_mail_ldap" name="SEND_CASUAL_MAIL" value="{$SEND_CASUAL_MAIL}" />
 	{/if}
-	{'Do you want to send mail to the new users, like casual piwigo users receive ?'|@translate}
-    </p>
-    
+	{'Do you want to send mail to the new users, like casual piwigo users receive?'|@translate}
+    </p> -->
 </fieldset>
 
-<p>
-<input type="submit" value="{'Save'|@translate}" name="save" />
-</p>
+
+
+
+<fieldset>
+	<legend>{'LDAP Group Mapping'|@translate}</legend>
+
+	
+	<!-- First group mapping -->
+	<ul>
+		<li>
+			<label for="group1a">{'Comma separated list of LDAP groups'|@translate}</label><br></br>
+			<input class="nice" size="100" type="text" id="group1a" name="GROUP1A" value="{$GROUP1A}" /><br></br>
+		</li>
+		
+		<li>
+			<label style="width:300px;" for="group1b">{'Comma separated list of Piwigo groups'|@translate}</label><br></br>
+			<input class="nice" size="100" type="text" id="group1b" name="GROUP1B" value="{$GROUP1B}" /><br></br>
+		</li>
+	</ul>
+</fieldset>
+ 
+<p> <input type="submit" value="{'Save'|@translate}" name="save" /> </p>
+	{if (!empty($ISSUE_WITH_GROUPS))}
+		{$ISSUE_WITH_GROUPS}
+	{/if}
+</form>
+
+
+<!-- Load LDAP groups for a user name -->
+<form method="post" action="{$PLUGIN_NEWUSERS}" class="general">
+	<fieldset>
+		<legend>{'Load LDAP groups for a user'|@translate}</legend>
+		<ul>
+			<li>
+				<label for="username">{'Test Username'|@translate}</label><br></br>
+				<input class="nice" size="70" type="text" id="tuser" name="TUSER" value="{$TUSER}" /><br></br>
+			</li>
+		</ul>
+		<i>LDAP must have been successfully configured previously</i>
+	</fieldset>
+
+	<p> <input type="submit" value="{'Check Groups'|@translate}" name="check_groups" /> </p>
+	
+	{if (!empty($USER_LDAP_GROUPS))}
+		{$USER_LDAP_GROUPS}
+	{/if}
 </form>
