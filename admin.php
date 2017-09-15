@@ -12,7 +12,7 @@ $tabsheet = new tabsheet();
 $tabsheet->set_id('ldap_login');
 
 $tabsheet->add('configuration', l10n('Configuration'), LDAP_LOGIN_ADMIN . '-configuration');
-$tabsheet->add('newusers', l10n('New users when ldap auth is successfull'), LDAP_LOGIN_ADMIN . '-newusers');
+$tabsheet->add('newusers', l10n('New User Action'), LDAP_LOGIN_ADMIN . '-newusers');
 $tabsheet->select($page['tab']);
 $tabsheet->assign();
   
@@ -21,5 +21,5 @@ include(LDAP_LOGIN_PATH . 'admin/' . $page['tab'] . '.php');
 
 // template vars
 $template->assign('LDAP_LOGIN_PATH', get_root_url() . LDAP_LOGIN_PATH );
-  
+
 ?>
