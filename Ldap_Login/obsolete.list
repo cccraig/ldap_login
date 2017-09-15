@@ -1,0 +1,16 @@
+DO
+min/
+min/index.php
+min/ldap_login_plugin_admin.php
+min/ldap_login_plugin_admin.tpl
+ass.ldap.php
+dex.php
+nguage/
+nguage/en_UK/
+nguage/en_UK/plugin.lang.php
+nguage/fr_CA/
+nguage/fr_CA/plugin.lang.php
+nguage/fr_FR/
+nguage/fr_FR/plugin.lang.php
+nguage/index.php
+in.inc.php
