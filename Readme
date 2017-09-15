@@ -1,3 +1,14 @@
+Hi-di-ho good reader!
+
+I'm an employee at a University who was tasked with finding a free photo platform for hosting our own photos/videos. I discovered Piwigo, decided it was awesome, and got a demo version up and running. However, it is absolutely critical for our organization that we be able to bounce login requests off LDAP. Finding this original plugin was no longer maintained, and that its other forks did not seem to be working, I forked the original and got it working.
+
+*Disclaimer, it works on my machine :-)
+Linux Mint 18.1 (Ubuntu 16.04.1)
+PHP 7.0
+MySQL 5.7.19
+Apache/2.4.18
+
+
 Ldap_Login is a piwigo plugin to allow people to connect and get access to a piwigo website with their Ldap credentials.
 
 There is an option to allow creation of new users if they are granted access by ldap but don't exist in Piwigo DB.
