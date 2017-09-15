@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
  
 $me = get_plugin_data($plugin_id);
