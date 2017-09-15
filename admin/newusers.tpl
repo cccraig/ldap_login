@@ -61,9 +61,6 @@ label
 
 <fieldset>
 	<legend>{'LDAP Group Mapping'|@translate}</legend>
-
-	
-	<!-- First group mapping -->
 	<ul>
 		<li>
 			<label for="group1a">{'Comma separated list of LDAP groups'|@translate}</label><br></br>
