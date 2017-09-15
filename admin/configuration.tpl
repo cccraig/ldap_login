@@ -101,12 +101,12 @@ label
 	<ul>
 		<li>
 			<label for="username">{'Username'|@translate}</label><br></br>
-			<input size="70" type="text" id="username" name="USERNAME" value="{$USERNAME}" /><br></br>
+			<input class="nice" size="70" type="text" id="username" name="USERNAME" value="{$USERNAME}" /><br></br>
 		</li>
 		
 		<li>
 			<label for="ld_attr">{'Your password'|@translate}</label><br></br>
-			<input size="70" type="password" id="password" name="PASSWORD" value="{$PASSWORD}" /><br></br>
+			<input class="nice" size="70" type="password" id="password" name="PASSWORD" value="{$PASSWORD}" /><br></br>
 		</li>
 	</ul>
 
