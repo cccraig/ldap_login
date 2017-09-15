@@ -33,27 +33,23 @@ class Ldap_Login_maintain extends PluginMaintain
    */
   function install($plugin_version, &$errors=array())
   {
+
     global $conf;
-    $config=new Ldap();
-    
-    if (file_exists(LDAP_LOGIN_PATH.'data.dat' )) {
-    $config->load_config();
-    }
-    
-    else {
-    $config->load_default_config();
-    }
 
-    $config->save_config();
+    /**
+     * Just initialize the class
+     * The constructor takes care of
+     * all the rest.
+     */
+    $ldap = new Ldap();
 
-    $this->installed = true;
+    $this -> installed = true;
   }
 
   /**
    * plugin activation
    *
-   * this function is triggered after installation, by manual activation
-   * or after a plugin update
+   * this function is triggered after installation, by manual activation or after a plugin update
    * for this last case you must manage updates tasks of your plugin in this function
    */
   function activate($plugin_version, &$errors=array())
