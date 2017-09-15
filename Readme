@@ -1,13 +1,13 @@
-Ldap_Login is a piwigo plugin to allow people to connect and get access to a piwigo website with their Ldap credentials.
+Hi-di-ho good reader!
 
-There is an option to allow creation of new users if they are granted access by ldap but don't exist in Piwigo DB.
+I'm an employee at a University who was tasked with finding a free photo platform for hosting our own photos/videos. I discovered Piwigo, decided it was awesome, and got a demo version up and running. However, it is absolutely critical for our organization that we be able to bounce login requests off LDAP. Finding this original plugin was no longer maintained, and that the other forks did not seem to be working, I forked the original and got it working.
 
-I have lost interest in this plugin and I am not using Piwigo anymore. Thus, I stop developping it.
+*Disclaimer, it works on my machine :-)
+ Linux Mint 18.1 (Ubuntu 16.04.1)
+ PHP 7.0
+ MySQL 5.7.19
+ Apache/2.4.18
 
-If you wish to use it, update or upgrade it, please take matter at hands : fork and work on it again. I would be glad if you do.
-I can even explain you some of my code design. But nothing more.
+Most of the original code is still the same, but has some very small style changes. The big edit that I made was using a very full featured ldap class to extend the main Piwigo ldap class (class.ldap.php). This helped a lot. Secondly, I wanted to be able to map ldap users to specific groups in Piwigo. To do this you enter a comma separated list of ldap groups in one input, and a matching comma separated list of Piwigo groups in another input. The Piwigo groups are then mapped (by ID) to the named ldap group and compared on login. The user will be removed from a group if they are no longer listed in the corresponding ldap group. To help with choosing groups, I included a feature to query ldap for the groups a specific user belongs to. I also removed some of the email options in the template, although they are still there in the control code. Checks for them need to be implemented in the login area.
 
-If you fork it (great), and manage to make it work again (better) and even wish to publish again, please contact me: stephane @ 22decembre.eu.
-I would gladly transfer ownership on the Piwigo website.
-
-PLEASE UNDERSTAND: I WON'T WORK ANYMORE ON THIS ANYMORE.
+If you have issues authenticating users please let me know and I will try to help.

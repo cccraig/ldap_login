@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: Ldap_Login
-Version: 1.2
+Version: 1.3
 Description: Allow piwigo authentication along an ldap
-Plugin URI: http://www.22decembre.eu/2014/02/09/piwigo-ldap-login-v1-1/
-Author: 22decembre
-Author URI: http://www.22decembre.eu
+Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
+Author: cccraig
+Original Author: 22decembre
+Original Author URI: http://www.22decembre.eu
 */
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
@@ -13,9 +14,9 @@ if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 // | Define plugin constants                                               |
 // +-----------------------------------------------------------------------+
 define('LDAP_LOGIN_ID',      basename(dirname(__FILE__)));
-define('LDAP_LOGIN_PATH' ,   __DIR__ . '/');
+define('LDAP_LOGIN_PATH' ,   PHPWG_PLUGINS_PATH . LDAP_LOGIN_ID . '/');
 define('LDAP_LOGIN_ADMIN',   get_root_url() . 'admin.php?page=plugin-' . LDAP_LOGIN_ID);
-define('LDAP_LOGIN_VERSION', '1.2');
+define('LDAP_LOGIN_VERSION', '1.1');
 
 include_once(LDAP_LOGIN_PATH.'/class.ldap.php');
 
@@ -33,10 +34,14 @@ add_event_handler('get_admin_plugin_menu_links', array(&$ldap, 'ldap_admin_menu'
 // | Admin menu loading                                                    |
 // +-----------------------------------------------------------------------+
 
+
+// Add ldap class to plugin
 $ldap = new Ldap();
 $ldap->load_config();
 set_plugin_data($plugin['id'], $ldap);
 unset($ldap);
+
+
 
 // +-----------------------------------------------------------------------+
 // | functions                                                             |
@@ -50,120 +55,100 @@ function random_password( $length = 8 ) {
 
 function ld_init(){
 	load_language('plugin.lang', LDAP_LOGIN_PATH);
-	global $conf;
 }
 
-function fail($username) {
-	trigger_action('login_failure', stripslashes($username));
-	return false;
-}
 
-function update_user($username,$id) {
-	$up = new Ldap();
-	$up->load_config();
-	$up->ldap_conn() or error_log("Unable to connect LDAP server : ".$up->getErrorString());
 
-	// update user piwigo rights / access according to ldap. Only if it's webmaster / admin, so no normal !
-	if($up->ldap_status($username) !='normal') {
-		single_update(USER_INFOS_TABLE,array('status' => $up->ldap_status($username)),array('user_id' => $id));
-	}
-
-	// search groups
-	$group_query = 'SELECT name, id FROM '.GROUPS_TABLE.';';
-	
-	$result = pwg_query($group_query);
-	$inserts = array();
-	while ($row = pwg_db_fetch_assoc($result))
-	{
-		if($up->user_membership($username, $up->ldap_group($row['name']))) {
-			$inserts[] = array('user_id' => $id,'group_id' => $row['id']);
-		}
-	}
-
-	if (count($inserts) > 0)
-	{
-		mass_inserts(USER_GROUP_TABLE, array('user_id', 'group_id'), $inserts,array('ignore'=>true));
-	}
-}
-
+/*
+ * Check user login
+ *
+ * @var bool
+ * @var string
+ * @var string
+ * @var bool
+ *
+ */
 function login($success, $username, $password, $remember_me){
 
 	global $conf;
-	$allow_auth = False;
-	
-	$obj = new Ldap();
-	$obj->load_config();
-	$obj->ldap_conn() or error_log("Unable to connect LDAP server : ".$obj->getErrorString());
-	
-	// if there's a users group...
-	if ($obj->config['users_group']) {
-		// and the user is in
-		if ($obj->user_membership($username,$obj->ldap_group($obj->config['users_group']))) {
-			// it can continue
-			$allow_auth = True;
-		}
-		else
-		{	// otherwise it means the user is not allowed to enter !
-			fail($username);
-		}
+
+	/*
+	 * Initialize the LDAP Class
+	 */
+	$ldap = new Ldap();
+
+	// Don't continue if LDAP cannot connect
+	if(!$ldap -> connect()) {
+		trigger_notify('login_failure', stripslashes($username));
+		return false;
 	}
-	else {
-	// if there's no user group, we can continue.
-	$allow_auth = True;
+
+	/* Check if using cn or mail to log in.
+	 * Reason is two-fold. One is for cases where
+	 * cn is not properly mapped to mail or vice versa.
+	 * second is to make sure nobody gets duplicated
+	 * by logging in with cn and then later with mail.
+	 */
+	include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
+
+	list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+
+	if(!$found) {
+		trigger_notify('login_failure', stripslashes($username));
+		return false;
 	}
-	
-	if ($allow_auth) {
-		if ($obj->ldap_bind_as($username,$password)){ // bind with userdn
-			// search user in piwigo database
-			$query = '
-				SELECT	'.$conf['user_fields']['id'].' AS id
-				FROM '.USERS_TABLE.'
-				WHERE	'.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($username).'\';';
+
+	// Try to authenticate the user through LDAP
+	$auth = $ldap -> authenticate2($mail, $password);
+
+	if ($auth) {
+
+		// Make a new user in the piwigo database?
+		if($ldap -> config['allow_newusers']) {
+
+			// SQL query to find user in piwigo database
+			$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($username).'\' ;';
+
+			// Query the user id
 			$row = pwg_db_fetch_assoc(pwg_query($query));
 
-			// if query is not empty, it means everything is ok and we can continue, auth is done !
-			if (!empty($row['id'])) {
-				update_user($username,$row['id']);
-				
-				log_user($row['id'], $remember_me);
-				trigger_action('login_success', stripslashes($username));
-				
-				return True;
-			}
-  	
-			// if query is empty but ldap auth is done we can create a piwigo user if it's said so !
-			else {
-				// this is where we check we are allowed to create new users upon that.
-				if ($obj->config['allow_newusers']) {
+			// Create new user if not exist
+			if($row == null) {
 			
-					// we got the email address
-					if ($obj->ldap_mail($username)) {
-						$mail = $obj->ldap_mail($username);
-					}
-					else {
-						$mail = NULL;
-					}
-			
-					// we actually register the new user
-					$new_id = register_user($username,random_password(8),$mail);
-					update_user($username,$new_id);
-                        
-					// now we fetch again his id in the piwigo db, and we get them, as we just created him !
-					log_user($new_id, False);
-					
-					trigger_action('login_success', stripslashes($username));
-					
-					redirect('profile.php');
-					return true;
-				}
-				// else : this is the normal behavior ! user is not created.
-				else { fail($username); }
+				// Now actually create the user
+				$id = register_user(
+					$username,
+					random_password(8),
+					$mail,
+					true
+				);
+
+				log_user($id, False);
+
+			} else {
+
+				$id = $row['id'];
+
+				log_user($id, False);
+
 			}
 		}
-		// ldap_bind_as was not successful
-		else { fail($username); }
+
+		/*
+		 * Do role mapping
+		 */
+		include_once(LDAP_LOGIN_PATH.'/include/ldap_group_mapping.php');
+		map_ldap_groups($ldap, $info, $id);
+
+
+		trigger_notify('login_success', stripslashes($username));
+		return true;
+
+	} else {
+
+		trigger_notify('login_failure', stripslashes($username));
+		return false;
+
 	}
-	// user is not allowed to auth or auth is wrong !
-	else { fail($username); }
 }
 ?>
