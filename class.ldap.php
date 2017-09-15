@@ -1,5 +1,7 @@
 <?php
 
+defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+
 // Require the updated LDAP class
 require_once("adLDAP.php");
 
