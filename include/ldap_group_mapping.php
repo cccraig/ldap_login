@@ -1,6 +1,6 @@
 <?php
 
-defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+if (!defined('LDAP_LOGIN_PATH')) die('Hacking attempt!');
 
 function map_ldap_groups($ldap, $info, $id) {
 
