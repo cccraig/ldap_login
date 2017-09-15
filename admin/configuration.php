@@ -93,9 +93,7 @@ function test_ldap() {
 
 
 /*
- * Initialize new ldap class to check binding. Use the try catch
- * because the adLDAP class trys to initialize an
- * ldap connection when the class is initialized.
+ * Initialize new ldap class to check binding.
  */
 function test_ldap_user($username, $password) {
 	global $template;
@@ -106,7 +104,21 @@ function test_ldap_user($username, $password) {
 		$ldap = new Ldap();
 
 		if ($ldap -> connect()) {
-			$x = $ldap -> authenticate2($username, $password);
+			
+			include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
+
+			list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+
+	
+			if($found) {
+
+				$x = $ldap -> authenticate2($mail, $password);
+
+			} else {
+
+				$x = false;
+
+			}
 
 			if($x) {
 
@@ -114,7 +126,7 @@ function test_ldap_user($username, $password) {
 
 			} else {
 
-				$html_msg = '<p style="color:green;">User authentication failed</p>';
+				$html_msg = '<p style="color:red;">User authentication failed</p>';
 
 			}
 
