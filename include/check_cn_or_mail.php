@@ -1,6 +1,6 @@
 <?php
 
-defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+if (!defined('LDAP_LOGIN_PATH')) die('Hacking attempt!');
 
 function test_for_cn_or_mail($ldap, $username) {
 
