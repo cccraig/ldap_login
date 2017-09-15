@@ -1,5 +1,7 @@
 <?php
 
+defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+
 function test_for_cn_or_mail($ldap, $username) {
 
 	// Check if using email or short name
