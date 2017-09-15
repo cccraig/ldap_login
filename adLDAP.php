@@ -1,4 +1,7 @@
 <?php
+
+defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+
 /**
  * PHP LDAP CLASS FOR MANIPULATING ACTIVE DIRECTORY 
  * Version 3.3.2
