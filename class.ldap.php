@@ -157,18 +157,6 @@ class Ldap extends adLDAP {
 
 
 
-    /**
-    * Check if successfully bound
-    * 
-    * @return bool
-    */
-    public function was_successful()
-    {
-          return $this -> _bind;
-    }
-
-
-
 
 	/**
 	* Validate a user's login credentials
