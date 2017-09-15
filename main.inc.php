@@ -2,7 +2,7 @@
 /*
 Plugin Name: Ldap_Login
 Version: 1.3.1
-Description: Allow piwigo authentication along an ldap
+Description: Allow piwigo authentication using LDAP
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
 Author: cccraig
 Original Author: 22decembre
