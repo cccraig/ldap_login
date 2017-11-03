@@ -1,1 +1,0 @@
-a:6:{s:14:"account_suffix";s:12:"@okstate.edu";s:7:"base_dn";s:23:"dc=ad,dc=Okstate,dc=edu";s:18:"domain_controllers";a:1:{i:0;s:21:"ldap://ad.okstate.edu";}s:11:"ad_username";s:7:"baeldap";s:11:"ad_password";s:8:"m4EWEptK";s:7:"use_ssl";b:0;}
