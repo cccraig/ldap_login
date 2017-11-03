@@ -106,13 +106,13 @@ class Ldap extends adLDAP {
 	 */
 	public function load_config() {
 
-		$conf_file = @file_get_contents( LDAP_LOGIN_PATH.'data.dat' );
+		$conf_file = @file_get_contents( LDAP_LOGIN_PATH.'config/data.dat' );
 
 		$defaults = $this -> load_default_config();
 
 		if ($conf_file!==false)
 		{
-			
+
 			$config = unserialize($conf_file);
 
 			foreach ($config as $key => $value) {
@@ -160,7 +160,7 @@ class Ldap extends adLDAP {
 
 	/**
 	* Validate a user's login credentials
-	* 
+	*
 	* @param string $username A user's AD username
 	* @param string $password A user's AD password
 	* @param bool optional $prevent_rebind
@@ -169,9 +169,9 @@ class Ldap extends adLDAP {
 	function authenticate2($username, $password, $prevent_rebind = false) {
 
 	    // Prevent null binding
-	    if ($username === NULL || $password === NULL) { return false; } 
+	    if ($username === NULL || $password === NULL) { return false; }
 	    if (empty($username) || empty($password)) { return false; }
-	    
+
 	    // Bind as the user
 	    $this->_bind = @ldap_bind($this->_conn, $username, $password);
 

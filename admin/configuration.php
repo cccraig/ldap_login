@@ -32,9 +32,12 @@ $template->assign(
  */
 function save_config($config)
 {
-	$file = fopen( LDAP_LOGIN_PATH.'/data.dat', 'w' );
-	fwrite($file, serialize($config) );
-	fclose( $file );
+	$file = fopen( LDAP_LOGIN_PATH.'/config/data.dat', 'w' );
+
+  if($file) {
+    fwrite($file, serialize($config) );
+    fclose( $file );
+  }
 }
 
 
@@ -43,7 +46,7 @@ function save_config($config)
 
 
 /*
- * Initialize new ldap class to check binding. 
+ * Initialize new ldap class to check binding.
  * Use the try catch in case something major
  * goes wrong when we try to connect.
  */
@@ -104,12 +107,12 @@ function test_ldap_user($username, $password) {
 		$ldap = new Ldap();
 
 		if ($ldap -> connect()) {
-			
+
 			include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
 
 			list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
-	
+
 			if($found) {
 
 				$x = $ldap -> authenticate2($mail, $password);
