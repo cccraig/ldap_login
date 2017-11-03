@@ -92,7 +92,8 @@ function login($success, $username, $password, $remember_me){
 	 * second is to make sure nobody gets duplicated
 	 * by logging in with cn and then later with mail.
 	 */
-	include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
+  $path = rtrim(LDAP_LOGIN_PATH, '/') . '/include/check_cn_or_mail.php';
+	include_once($path);
 
 	list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
@@ -117,7 +118,7 @@ function login($success, $username, $password, $remember_me){
 
 			// Create new user if not exist
 			if($row == null) {
-			
+
 				// Now actually create the user
 				$id = register_user(
 					$username,
@@ -140,7 +141,8 @@ function login($success, $username, $password, $remember_me){
 		/*
 		 * Do role mapping
 		 */
-		include_once(LDAP_LOGIN_PATH.'/include/ldap_group_mapping.php');
+    $path = rtrim(LDAP_LOGIN_PATH, '/') . '/include/ldap_group_mapping.php';
+		include_once($path);
 		map_ldap_groups($ldap, $info, $id);
 
 

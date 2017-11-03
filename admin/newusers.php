@@ -24,7 +24,7 @@ $template->assign(
  * Get all piwigo groups. Note $groups
  * is combined differently below.
  */
-$res = query2array('SELECT id, name FROM ' . GROUPS_TABLE . ' GROUP BY id;');	
+$res = query2array('SELECT id, name FROM ' . GROUPS_TABLE . ' GROUP BY id;');
 $group_name = array_column($res, "name");
 $group_ids = array_column($res, "id");
 $groups = array_combine($group_ids, $group_name);
@@ -100,7 +100,7 @@ if (isset($_POST['save'])){
 	if(count($piwigo_groups) != count($ldap_groups)) {
 
 		$html_msg = '<p style="color:red;">ERROR: Unequal mapping between LDAP and Piwigo groups</p>';
-		
+
 		$template -> assign('ISSUE_WITH_GROUPS', $html_msg);
 
 	} else {
@@ -140,7 +140,9 @@ if (isset($_POST['check_groups'])){
 			// Ldap is already initialized. Open a connection
 			if($ldap -> connect()) {
 
-				include_once(LDAP_LOGIN_PATH.'/includes/check_cn_or_mail.php');
+        $path = rtrim(LDAP_LOGIN_PATH, '/') . '/include/check_cn_or_mail.php';
+
+				include_once($path);
 
 				list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
