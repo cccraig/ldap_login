@@ -55,7 +55,7 @@ $template->assign('SEND_CASUAL_MAIL',	$ldap->config['send_password_by_mail_ldap'
  */
 list($g1, $g2) = ['', ''];
 
-if($ldap -> config['group_mapping'] != '') {
+if($ldap -> config['group_mapping'] !== '') {
 	foreach ($ldap -> config['group_mapping'] as $key => $value) {
 		foreach ($value as $i => $v) {
 			$g2 = $g2 . ', ' . $groups[$key];
@@ -103,7 +103,7 @@ if (isset($_POST['save'])){
 
 		$template -> assign('ISSUE_WITH_GROUPS', $html_msg);
 
-	} else {
+  } else {
 
 		// Key the groups by the pretty name
 		$groups = array_combine($group_name, $group_ids);
@@ -111,9 +111,9 @@ if (isset($_POST['save'])){
 		$map = array();
 
 		foreach ($ldap_groups as $key => $lg) {
-
-			$map[$groups[$piwigo_groups[$key]]][] = $lg;
-
+      if ($lg !== "") {
+			     $map[$groups[$piwigo_groups[$key]]][] = $lg;
+      }
 		}
 
 		$ldap -> config['group_mapping'] = $map;

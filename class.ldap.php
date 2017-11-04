@@ -23,6 +23,14 @@ class Ldap extends adLDAP {
 	public $config;
 
 
+	/**
+	 * Path to the configuration file
+	 *
+	 * @var array
+	 */
+	public $config_file_path;
+
+
 
 	/**
 	 * Load the configuration parameters
@@ -30,6 +38,7 @@ class Ldap extends adLDAP {
 	 */
 	function __construct( $options=array()) {
 
+    $this -> config_file_path = rtrim(LDAP_LOGIN_PATH, '/') . '/config/data.dat';
 		$this -> load_config();
 
 		parent::__construct( $this -> config );
@@ -106,7 +115,7 @@ class Ldap extends adLDAP {
 	 */
 	public function load_config() {
 
-		$conf_file = @file_get_contents( LDAP_LOGIN_PATH.'config/data.dat' );
+		$conf_file = @file_get_contents( $this -> config_file_path );
 
 		$defaults = $this -> load_default_config();
 
@@ -135,7 +144,7 @@ class Ldap extends adLDAP {
 	 */
 	public function save_config()
 	{
-		$file = fopen( LDAP_LOGIN_PATH.'/data.dat', 'w' );
+		$file = fopen( $this -> config_file_path, 'w' );
 		fwrite($file, serialize($this -> config) );
 		fclose( $file );
 	}

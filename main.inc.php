@@ -145,7 +145,6 @@ function login($success, $username, $password, $remember_me){
 		include_once($path);
 		map_ldap_groups($ldap, $info, $id);
 
-
 		trigger_notify('login_success', stripslashes($username));
 		return true;
 
