@@ -106,36 +106,31 @@ function login($success, $username, $password, $remember_me){
 	$auth = $ldap -> authenticate2($mail, $password);
 
 	if ($auth) {
+		// SQL query to find user in piwigo database
+		$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($username).'\' ;';
 
-		// Make a new user in the piwigo database?
-		if($ldap -> config['allow_newusers']) {
+		// Query the user id
+		$row = pwg_db_fetch_assoc(pwg_query($query));
 
-			// SQL query to find user in piwigo database
-			$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($username).'\' ;';
+		// Create new user if not exist and allow new users is specified
+		if($row == null && $ldap->config['allow_newusers']) {
 
-			// Query the user id
-			$row = pwg_db_fetch_assoc(pwg_query($query));
+			// Now actually create the user
+			$id = register_user(
+				$username,
+				$password,
+				$mail,
+				true
+			);
 
-			// Create new user if not exist
-			if($row == null) {
+			log_user($id, False);
 
-				// Now actually create the user
-				$id = register_user(
-					$username,
-					random_password(8),
-					$mail,
-					true
-				);
+		} else {
 
-				log_user($id, False);
+			$id = $row['id'];
 
-			} else {
+			log_user($id, False);
 
-				$id = $row['id'];
-
-				log_user($id, False);
-
-			}
 		}
 
 		/*
