@@ -3,7 +3,7 @@
 Plugin Name: Ldap Login
 Version: auto
 Description: Allow piwigo authentication using LDAP
-Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
+Plugin URI: 
 Author: cccraig
 Original Author: 22decembre
 Original Author URI: http://www.22decembre.eu
