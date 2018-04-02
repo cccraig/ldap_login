@@ -11,3 +11,6 @@ I'm an employee at a University who was tasked with finding a free photo platfor
 Most of the original template code is still the same, but has some very small style changes. The big edit that I made was using a very full featured ldap class to extend the main Piwigo ldap class (class.ldap.php). This helped a lot. Secondly, I wanted to be able to map ldap users to specific groups in Piwigo. To do this you enter a comma separated list of ldap groups in one input, and a matching comma separated list of Piwigo groups in another input. The Piwigo groups are then mapped (by ID) to the named ldap group and compared on login. The user will be removed from a group if they are no longer listed in the corresponding ldap group. To help with choosing groups, I included a feature to query ldap for the groups a specific user belongs to. I also removed some of the email options in the template, although they are still there in the control code. Checks for them need to be implemented in the login area.
 
 If you have issues authenticating users please let me know and I will try to help.
+
+WARNING!
+I have changed the name from Ldap_Login to simply LdapLogin (no underscore). This will not hurt anything but you will need to change the plugin name in the Piwigo plugins table.

@@ -5,6 +5,12 @@ if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 global $template;
 
 /*
+ * Initialize Ldap and load the configuration
+ */
+$ldap = new Ldap();
+$config = $ldap->config;
+
+/*
  * Specify the template for the admin page configuration tab
  */
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/configuration.tpl') );
@@ -16,31 +22,10 @@ $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/co
  */
 $template->assign(
   array(
-    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
-    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
-    ));
-
-
-
-
-/*
- * Function to save the user entered configuration
- *
- * @var array
- *
- * @return void
- */
-function save_config($config)
-{
-	$file = fopen( LDAP_LOGIN_PATH.'/config/data.dat', 'w' );
-
-  if($file) {
-    fwrite($file, serialize($config) );
-    fclose( $file );
-  }
-}
-
-
+    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-LdapLogin-configuration',
+    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-LdapLogin-configuration',
+    )
+);
 
 
 
@@ -51,44 +36,19 @@ function save_config($config)
  * goes wrong when we try to connect.
  */
 function test_ldap() {
-	global $template, $config;
+	global $template, $page;
+
+  $ldap = new Ldap();
 
 	try {
-
-		// Initialize LDAP
-		$ldap = new Ldap( $config );
-
-		// Load config in case it's empty
-		$config = $ldap -> config;
-
-		/*
-		 * Assign variables to template
-		 */
-		$template->assign('HOST', 	$config['account_suffix']);
-		$template->assign('BASEDN',	$config['base_dn']);
-		$template->assign('DOMAIN_CONTROLLER',	$config['domain_controllers'][0]);
-		$template->assign('LD_USE_SSL',	$config['use_ssl']);
-		$template->assign('LD_BINDPW',	$config['ad_password']);
-		$template->assign('LD_BINDDN',	$config['ad_username']);
-
-		// try to bind LDAP
 		if($ldap -> connect()) {
-
-			$html_msg = '<p style="color:green;">LDAP connection successfully bound </p>';
-
+      array_push($page['infos'], l10n('LDAP connection successfully bound'));
 		} else {
-
-			$html_msg = '<p style="color:red;">LDAP connection not bound </p>';
-
+      array_push($page['errors'], l10n('LDAP failed to bind'));
 		}
 
-		$template -> assign('LD_CHECK_LDAP', $html_msg);
-
 	} catch (adLDAPException $e) {
-
-		$html_msg = '<p style="color:red;">ERROR: ' . $e -> getMessage() . '</p>';
-
-		$template -> assign('LD_CHECK_LDAP', $html_msg);
+    array_push($page['errors'], l10n('Error: '.$e->getMessage()));
 	}
 }
 
@@ -99,12 +59,11 @@ function test_ldap() {
  * Initialize new ldap class to check binding.
  */
 function test_ldap_user($username, $password) {
-	global $template;
+	global $template, $page;
+
+  $ldap = new Ldap();
 
 	try {
-
-		// Initialize LDAP
-		$ldap = new Ldap();
 
 		if ($ldap -> connect()) {
 
@@ -123,26 +82,16 @@ function test_ldap_user($username, $password) {
 			}
 
 			if($x) {
-
-				$html_msg = '<p style="color:green;">User successfully authenticated</p>';
-
+        array_push($page['infos'], l10n('User successfully authenticated'));
 			} else {
-
-				$html_msg = '<p style="color:red;">User authentication failed</p>';
-
+        array_push($page['errors'], l10n('User could not be authenticated'));
 			}
-
-			$template -> assign('LD_CHECK_LDAP_USER', $html_msg);
 		}
 
 	} catch(adLDAPException $e) {
-
-		$html_msg = '<p style="color:red;">ERROR: ' . $e -> getMessage() . '</p>';
-
-		$template -> assign('LD_CHECK_LDAP_USER', $html_msg);
+    array_push($page['errors'], l10n('Error: '.$e->getMessage()));
 	}
 }
-
 
 
 
@@ -152,9 +101,9 @@ function test_ldap_user($username, $password) {
  *
  * @var array
  */
-$config = array();
-
-if (isset($_POST['save'])){
+if (isset($_POST['save'])) {
+  $ldap = new Ldap();
+  $config = $ldap->config;
 	$config['account_suffix'] = $_POST['HOST'];
 	$config['base_dn'] = $_POST['BASEDN'];
 	$config['domain_controllers'] = array($_POST['DOMAIN_CONTROLLER']);
@@ -171,10 +120,10 @@ if (isset($_POST['save'])){
 
 	}
 
-	save_config( $config );
-
+  $ldap->config = $config;
+  $ldap->save_config();
+  test_ldap();
 }
-
 
 
 
@@ -193,8 +142,16 @@ if (isset($_POST['check_ldap'])){
 }
 
 
-test_ldap();
 
+/*
+ * Assign variables to template
+ */
+$template->assign('HOST', 	$config['account_suffix']);
+$template->assign('BASEDN',	$config['base_dn']);
+$template->assign('DOMAIN_CONTROLLER',	$config['domain_controllers'][0]);
+$template->assign('LD_USE_SSL',	$config['use_ssl']);
+$template->assign('LD_BINDPW',	$config['ad_password']);
+$template->assign('LD_BINDDN',	$config['ad_username']);
 $template->assign_var_from_handle( 'ADMIN_CONTENT', 'plugin_admin_content');
 
 ?>

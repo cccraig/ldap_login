@@ -30,19 +30,19 @@ label
 		<p style="color:red;">{'Warning: LDAP Extension missing.'|@translate}</p>
 		<br />
 	{/if}
-	
+
 	<fieldset class="mainConf">
 	<legend>{'LDAP server host connection'|@translate}</legend>
-	
+
 	<ul>
 		<li>
 			<label for="host">{'LDAP server account suffix'|@translate}</label><br></br>
-			<input class="nice" size="70" type="text" id="host" name="HOST" value="{$HOST}" /><br></br>
+			<input class="nice" size="70" type="text" id="host" name="HOST" value="{$HOST}" placeholder="@yourdomain.edu"/><br></br>
 		</li>
-	
+
 		<li>
 			<label for="port">{'Ldap domain controller'|@translate}</label><br></br>
-			<input class="nice" size="70" type="text" id="port" name="DOMAIN_CONTROLLER" value="{$DOMAIN_CONTROLLER}" /><br></br>
+			<input class="nice" size="70" type="text" id="port" name="DOMAIN_CONTROLLER" value="{$DOMAIN_CONTROLLER}" placeholder="ldap://ad.domain.edu"/><br></br>
 		</li>
 
 		<li>
@@ -57,7 +57,7 @@ label
 		</ul>
 
     </fieldset>
-    
+
     <fieldset class="mainConf">
 	<legend>{'Ldap attributes'|@translate}</legend>
 	<ul>
@@ -67,7 +67,7 @@ label
 		</li>
 	</ul>
     </fieldset>
-    
+
     <fieldset class="mainConf">
 	<legend>{'Ldap connection credentials'|@translate}</legend>
 	<ul>
@@ -75,7 +75,7 @@ label
 			<label style="width:300px;" for="ld_binddn">{'Bind Username'|@translate}</label><br></br>
 			<input class="nice" size="70" type="text" id="ld_binddn" name="LD_BINDDN" value="{$LD_BINDDN}" /><br></br>
 		</li>
-		
+
 		<li>
 			<label for="ld_bindpw">{'Bind password'|@translate}</label><br></br>
 			<input class="nice" size="70" type="password" id="ld_bindpw" name="LD_BINDPW" value="{$LD_BINDPW}" /><br></br>
@@ -83,15 +83,10 @@ label
 	</ul>
 
 </fieldset>
- 
+
 <p>
 <input type="submit" value="{'Save'|@translate}" name="save" />
 </p>
-
-	{if (!empty($LD_CHECK_LDAP))}
- 		{$LD_CHECK_LDAP}
-	{/if}
-
 </form>
 
 <form method="post" action="{$PLUGIN_CHECK}" class="general">
@@ -103,20 +98,14 @@ label
 			<label for="username">{'Username'|@translate}</label><br></br>
 			<input class="nice" size="70" type="text" id="username" name="USERNAME" value="{$USERNAME}" /><br></br>
 		</li>
-		
+
 		<li>
-			<label for="ld_attr">{'Your password'|@translate}</label><br></br>
+			<label for="password">{'Your password'|@translate}</label><br></br>
 			<input class="nice" size="70" type="password" id="password" name="PASSWORD" value="{$PASSWORD}" /><br></br>
 		</li>
 	</ul>
 
 </fieldset>
 <p><input type="submit" value="{'Test Settings'|@translate}" name="check_ldap" /></p>
-
-
-{if (!empty($LD_CHECK_LDAP_USER))}
-		{$LD_CHECK_LDAP_USER}
-{/if}
-
 </form>
 </div>

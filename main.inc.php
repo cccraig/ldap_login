@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Ldap_Login
+Plugin Name: Ldap Login
 Version: auto
 Description: Allow piwigo authentication using LDAP
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
@@ -47,13 +47,6 @@ unset($ldap);
 // +-----------------------------------------------------------------------+
 // | functions                                                             |
 // +-----------------------------------------------------------------------+
-
-function random_password( $length = 8 ) {
-    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
-    $password = substr( str_shuffle( $chars ), 0, $length );
-    return $password;
-}
-
 function ld_init(){
 	load_language('plugin.lang', LDAP_LOGIN_PATH);
 }

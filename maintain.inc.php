@@ -23,7 +23,7 @@ class Ldap_Login_maintain extends PluginMaintain
    *    - use "IF NOT EXISTS" for table creation
    */
   private $installed = false;
-  
+
   /**
    * plugin installation
    *
@@ -59,7 +59,7 @@ class Ldap_Login_maintain extends PluginMaintain
       $this->install($plugin_version, $errors);
     }
   }
-  
+
   function deactivate()
   {
   }

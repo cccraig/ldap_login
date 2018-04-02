@@ -2,7 +2,7 @@
 
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
-global $template;
+global $template, $page;
 
 /*
  * Specify the template for the admin page new users tab
@@ -14,9 +14,8 @@ $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/ne
  * Assign action to the newuser tab
  */
 $template->assign(
-  array(
-    'PLUGIN_NEWUSERS' => get_root_url().'admin.php?page=plugin-Ldap_Login-newusers',
-    ));
+  array('PLUGIN_NEWUSERS' => get_root_url().'admin.php?page=plugin-LdapLogin-newusers')
+);
 
 
 
@@ -39,44 +38,10 @@ $groups = array_combine($group_ids, $group_name);
 $ldap = new Ldap();
 
 
-
-/*
- * Assign configuration values to page template
- */
-$template->assign('ALLOW_NEWUSERS',		$ldap->config['allow_newusers']);
-$template->assign('ADVERTISE_ADMINS',	$ldap->config['advertise_admin_new_ldapuser']);
-$template->assign('SEND_CASUAL_MAIL',	$ldap->config['send_password_by_mail_ldap']);
-
-// $ldap -> config['group_mapping'] = '';
-
-/*
- * Loop through group mappings and assign
- * value is an array
- */
-list($g1, $g2) = ['', ''];
-
-if($ldap -> config['group_mapping'] !== '') {
-	foreach ($ldap -> config['group_mapping'] as $key => $value) {
-		foreach ($value as $i => $v) {
-			if($key !== "") {
-				$g2 = $g2 . ', ' . $groups[$key];
-				$g1 = $g1 . ', ' . $v;
-			}
-		}
-	}
-}
-
-$g1 = ltrim($g1, ',');
-$g2 = ltrim($g2, ',');
-
-$template->assign('GROUP1A', $g1);
-$template->assign('GROUP1B', $g2);
-
-
 /*
  * Process form post
  */
-if (isset($_POST['save'])){
+if (isset($_POST['save'])) {
 
 	if (isset($_POST['ALLOW_NEWUSERS'])){
 		$ldap->config['allow_newusers'] = True;
@@ -101,20 +66,16 @@ if (isset($_POST['save'])){
 
 	if(count($piwigo_groups) != count($ldap_groups)) {
 
-		$html_msg = '<p style="color:red;">ERROR: Unequal mapping between LDAP and Piwigo groups</p>';
-
-		$template -> assign('ISSUE_WITH_GROUPS', $html_msg);
+    array_push($page['errors'], l10n('Unequal number of LDAP and Piwigo groups'));
 
   } else {
 
-		// Key the groups by the pretty name
-		$groups = array_combine($group_name, $group_ids);
-
 		$map = array();
+    $g = array_combine($group_name, $group_ids);
 
 		foreach ($ldap_groups as $key => $lg) {
       if ($lg !== "") {
-			     $map[$groups[$piwigo_groups[$key]]][] = $lg;
+			     $map[$g[$piwigo_groups[$key]]][] = $lg;
       }
 		}
 
@@ -123,6 +84,8 @@ if (isset($_POST['save'])){
 
 	// Save the new configuration
 	$ldap -> save_config();
+
+  array_push($page['info'], l10n('LDAP group to Piwigo group mapping successfully saved.'));
 }
 
 
@@ -133,7 +96,7 @@ if (isset($_POST['save'])){
 if (isset($_POST['check_groups'])){
 
 	// Don't do anything unless they entered a username/email to
-	if(isset($_POST['TUSER'])) {
+	if(isset($_POST['TUSER']) && $_POST['TUSER'] != "") {
 
 		$username = $_POST['TUSER'];
 
@@ -150,7 +113,7 @@ if (isset($_POST['check_groups'])){
 
 				if(!$found) {
 
-					$html_msg = '<p style="color:red;">ERROR: User not found</p>';
+            array_push($page['errors'], l10n('User not found'));
 
 				} else {
 
@@ -168,31 +131,57 @@ if (isset($_POST['check_groups'])){
 
 					$html_msg = $html_msg . "</ul></p>";
 
+          $template -> assign('USER_LDAP_GROUPS', $html_msg);
 				}
 
 			} else {
-
-				$html_msg = '<p style="color:red;">ERROR: LDAP connection unsuccessful</p>';
-
+        array_push($page['errors'], l10n('LDAP connection unsuccessful'));
 			}
 
 		} catch(adLDAPException $e) {
 
-			$html_msg = '<p style="color:red;">ERROR: ' . $e -> getMessage() . '</p>';
+      array_push($page['errors'], l10n('ERROR:'.$e->getMessage()));
 
 		}
 
 	} else {
 
-		$html_msg = '<p style="color:red;">ERROR: You must specify a user</p>';
+    array_push($page['errors'], l10n('You must specify a user!'));
 
 	}
-
-	$template -> assign('USER_LDAP_GROUPS', $html_msg);
-
 }
 
 
+
+/*
+ * Assign configuration values to page template
+ */
+$template->assign('ALLOW_NEWUSERS',		$ldap->config['allow_newusers']);
+$template->assign('ADVERTISE_ADMINS',	$ldap->config['advertise_admin_new_ldapuser']);
+$template->assign('SEND_CASUAL_MAIL',	$ldap->config['send_password_by_mail_ldap']);
+
+/*
+ * Loop through group mappings and assign
+ * value is an array
+ */
+list($g1, $g2) = ['', ''];
+
+if($ldap -> config['group_mapping'] !== '') {
+	foreach ($ldap -> config['group_mapping'] as $key => $value) {
+		foreach ($value as $i => $v) {
+			if($key !== "") {
+				$g2 = $g2 . ', ' . $groups[$key];
+				$g1 = $g1 . ', ' . $v;
+			}
+		}
+	}
+}
+
+$g1 = ltrim($g1, ',');
+$g2 = ltrim($g2, ',');
+
+$template->assign('GROUP1A', $g1);
+$template->assign('GROUP1B', $g2);
 
 /*
  * Serve the template content

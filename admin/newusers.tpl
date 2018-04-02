@@ -27,7 +27,7 @@ label
 
 <fieldset>
 	<legend>{'LDAP Login Configuration'|@translate}</legend>
-	
+
     <p>
 	{if $ALLOW_NEWUSERS}
 		<input type="checkbox" id="allow_newusers" name="ALLOW_NEWUSERS" value="{$ALLOW_NEWUSERS}" checked />
@@ -45,7 +45,7 @@ label
 	{/if}
 	{'Do you want admins to be notified by mail when new users are created after ldap login?'|@translate}
     </p>
-    
+
     <p>
 	{if $SEND_CASUAL_MAIL}
 		<input type="checkbox" id="send_password_by_mail_ldap" name="SEND_CASUAL_MAIL" value="{$SEND_CASUAL_MAIL}" checked />
@@ -66,18 +66,15 @@ label
 			<label for="group1a">{'Comma separated list of LDAP groups'|@translate}</label><br></br>
 			<input class="nice" size="100" type="text" id="group1a" name="GROUP1A" value="{$GROUP1A}" /><br></br>
 		</li>
-		
+
 		<li>
 			<label style="width:300px;" for="group1b">{'Comma separated list of Piwigo groups'|@translate}</label><br></br>
 			<input class="nice" size="100" type="text" id="group1b" name="GROUP1B" value="{$GROUP1B}" /><br></br>
 		</li>
 	</ul>
 </fieldset>
- 
+
 <p> <input type="submit" value="{'Save'|@translate}" name="save" /> </p>
-	{if (!empty($ISSUE_WITH_GROUPS))}
-		{$ISSUE_WITH_GROUPS}
-	{/if}
 </form>
 
 
@@ -95,7 +92,7 @@ label
 	</fieldset>
 
 	<p> <input type="submit" value="{'Check Groups'|@translate}" name="check_groups" /> </p>
-	
+
 	{if (!empty($USER_LDAP_GROUPS))}
 		{$USER_LDAP_GROUPS}
 	{/if}
