@@ -58,8 +58,10 @@ list($g1, $g2) = ['', ''];
 if($ldap -> config['group_mapping'] !== '') {
 	foreach ($ldap -> config['group_mapping'] as $key => $value) {
 		foreach ($value as $i => $v) {
-			$g2 = $g2 . ', ' . $groups[$key];
-			$g1 = $g1 . ', ' . $v;
+			if($key !== "") {
+				$g2 = $g2 . ', ' . $groups[$key];
+				$g1 = $g1 . ', ' . $v;
+			}
 		}
 	}
 }

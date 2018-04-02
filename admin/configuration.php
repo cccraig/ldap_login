@@ -112,7 +112,6 @@ function test_ldap_user($username, $password) {
 
 			list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
-
 			if($found) {
 
 				$x = $ldap -> authenticate2($mail, $password);
