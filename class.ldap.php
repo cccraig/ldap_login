@@ -197,6 +197,25 @@ class Ldap extends adLDAP {
 
 	    }
 	}
+
+
+	public function query_group_memberships($info) {
+		$id = $this->config['group_use_fulldn'] ? $info['dn'] : $info[$this->config['username_attr']][0];
+		$groupid_attr = $this->config['groupid_attr'];
+
+		$query = ldap_search($this->_conn, $this->config['group_base_dn'], $this->config['group_user_attr'].'='.$id, array($groupid_attr));
+		$result = ldap_get_entries($this->_conn, $query);
+		unset($result['count']);
+
+		$result = array_map(
+			function ($entry) use ($groupid_attr) {
+				return $entry[$groupid_attr][0];
+			}, $result
+		);
+
+		return $result;
+	}
+
 }
 
 ?>

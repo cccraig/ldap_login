@@ -77,6 +77,40 @@ label
     </fieldset>
 
     <fieldset class="mainConf">
+	<legend>{'LDAP Groups'|@translate}</legend>
+	<ul>
+		<li>
+			<label style='width:100%; float: none;' for="use_memberof">{'Use memberOf attribute (no need to provide configuration options below)'|@translate}</label><br/>
+			{if $USE_MEMBEROF}
+				<input type="checkbox" id="use_memberof" name="USE_MEMBEROF" value="{$USE_MEMBEROF}" checked />
+			{else}
+				<input type="checkbox" id="use_memberof" name="USE_MEMBEROF" value="{$USE_MEMBEROF}" />
+			{/if}
+		</li>
+		<li>
+			<label style="width:500px;" for="group_basedn">{'Group Base DN (e.g.: ou=groups,dc=example,dc=com)'|@translate}</label><br></br>
+			<input class="nice" size="70" type="text" id="group_basedn" name="GROUP_BASEDN" value="{$GROUP_BASEDN}" />
+		</li>
+		<li>
+			<label style="width:500px;" for="groupid_attr">{'Attribute corresponding to the group id (e.g.: cn)'|@translate}</label><br></br>
+			<input class="nice" size="70" type="text" id="groupid_attr" name="GROUPID_ATTR" value="{$GROUPID_ATTR}" />
+		</li>
+		<li>
+			<label style="width:500px;" for="group_user_attr">{'Group attribute which holds to the reference to the users (e.g.: memberuid)'|@translate}</label><br></br>
+			<input class="nice" size="70" type="text" id="group_user_attr" name="GROUP_USER_ATTR" value="{$GROUP_USER_ATTR}" />
+		</li>
+		<li>
+			<label style='width:100%; float: none;' for="group_use_fulldn">{'Use full DN to search for group members'|@translate}</label><br/>
+			{if $GROUP_USE_FULLDN}
+				<input type="checkbox" id="group_use_fulldn" name="GROUP_USE_FULLDN" checked />
+			{else}
+				<input type="checkbox" id="group_use_fulldn" name="GROUP_USE_FULLDN" />
+			{/if}
+		</li>
+	</ul>
+    </fieldset>
+
+    <fieldset class="mainConf">
 	<legend>{'Ldap connection credentials'|@translate}</legend>
 	<ul>
 		<li>

@@ -40,6 +40,10 @@ function test_for_cn_or_mail($ldap, $username) {
                 $login_attr = $ldap->config['login_attr'] === 'dn' ? $info[0]['dn'] : $info[0][$ldap->config['login_attr']][0];
 	}
 
+        if (!$ldap->config['use_memberof']) {
+          $info['0']['memberof'] = $ldap->query_group_memberships($info[0]);
+        }
+
 	return array($username, $mail, $login_attr, $info, true);
 }
 
