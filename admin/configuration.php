@@ -108,6 +108,7 @@ if (isset($_POST['save'])) {
 	$config['account_suffix'] = $_POST['HOST'];
 	$config['base_dn'] = $_POST['BASEDN'];
 	$config['login_attr'] = $_POST['LOGIN_ATTR'];
+	$config['username_attr'] = $_POST['USERNAME_ATTR'];
 	$config['domain_controllers'] = array($_POST['DOMAIN_CONTROLLER']);
 	$config['ad_username'] = $_POST['LD_BINDDN'];
 	$config['ad_password'] = $_POST['LD_BINDPW'];
@@ -151,6 +152,7 @@ if (isset($_POST['check_ldap'])){
 $template->assign('HOST', 	$config['account_suffix']);
 $template->assign('BASEDN',	$config['base_dn']);
 $template->assign('LOGIN_ATTR',	array_key_exists('login_attr', $config) ? $config['login_attr'] : 'dn');
+$template->assign('USERNAME_ATTR',    array_key_exists('username_attr', $config) ? $config['username_attr'] : 'cn');
 $template->assign('DOMAIN_CONTROLLER',	$config['domain_controllers'][0]);
 $template->assign('LD_USE_SSL',	$config['use_ssl']);
 $template->assign('LD_BINDPW',	$config['ad_password']);

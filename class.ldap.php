@@ -92,6 +92,7 @@ class Ldap extends adLDAP {
 				'primarygroupid',
 				'objectsid',
 				$this->config['login_attr'],
+				$this->config['username_attr'],
 			)
 		);
 

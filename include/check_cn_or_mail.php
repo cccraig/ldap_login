@@ -11,7 +11,7 @@ function test_for_cn_or_mail($ldap, $username) {
 	if($pos === false) {
 
 		// Filter query
-		$filter = 'cn=' . $username;
+		$filter = $ldap->config['username_attr'] . '=' . $username;
 
 		$info = $ldap -> get_ldap_info($username, $filter);
 
@@ -36,7 +36,7 @@ function test_for_cn_or_mail($ldap, $username) {
 		}
 
 		$mail = $username;
-		$username = $info[0]['samaccountname'][0];
+		$username = $info[0][$ldap->config['username_attr']][0];
                 $login_attr = $ldap->config['login_attr'] === 'dn' ? $info[0]['dn'] : $info[0][$ldap->config['login_attr']][0];
 	}
 

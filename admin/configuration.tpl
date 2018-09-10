@@ -69,6 +69,10 @@ label
 			<label style="width:500px;" for="login_attr">{'Attribute to use as rdn for binding (e.g.: dn)'|@translate}</label><br></br>
 			<input class="nice" size="70" type="text" id="login_attr" name="LOGIN_ATTR" value="{$LOGIN_ATTR}" />
 		</li>
+		<li>
+			<label style="width:500px;" for="username_attr">{'Attribute corresponding to the username (e.g.: cn)'|@translate}</label><br></br>
+			<input class="nice" size="70" type="text" id="username_attr" name="USERNAME_ATTR" value="{$USERNAME_ATTR}" />
+		</li>
 	</ul>
     </fieldset>
 
