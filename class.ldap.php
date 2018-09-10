@@ -90,7 +90,8 @@ class Ldap extends adLDAP {
 				'displayname',
 				'telephonenumber',
 				'primarygroupid',
-				'objectsid'
+				'objectsid',
+				$this->config['login_attr'],
 			)
 		);
 

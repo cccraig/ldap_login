@@ -69,11 +69,12 @@ function test_ldap_user($username, $password) {
 
 			include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
 
-			list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+			list($username, $mail, $login_attr, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
 			if($found) {
 
-				$x = $ldap -> authenticate2($mail, $password);
+
+				$x = $ldap -> authenticate2($login_attr, $password);
 
 			} else {
 
@@ -106,6 +107,7 @@ if (isset($_POST['save'])) {
   $config = $ldap->config;
 	$config['account_suffix'] = $_POST['HOST'];
 	$config['base_dn'] = $_POST['BASEDN'];
+	$config['login_attr'] = $_POST['LOGIN_ATTR'];
 	$config['domain_controllers'] = array($_POST['DOMAIN_CONTROLLER']);
 	$config['ad_username'] = $_POST['LD_BINDDN'];
 	$config['ad_password'] = $_POST['LD_BINDPW'];
@@ -148,6 +150,7 @@ if (isset($_POST['check_ldap'])){
  */
 $template->assign('HOST', 	$config['account_suffix']);
 $template->assign('BASEDN',	$config['base_dn']);
+$template->assign('LOGIN_ATTR',	array_key_exists('login_attr', $config) ? $config['login_attr'] : 'dn');
 $template->assign('DOMAIN_CONTROLLER',	$config['domain_controllers'][0]);
 $template->assign('LD_USE_SSL',	$config['use_ssl']);
 $template->assign('LD_BINDPW',	$config['ad_password']);

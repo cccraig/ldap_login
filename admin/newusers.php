@@ -109,7 +109,7 @@ if (isset($_POST['check_groups'])){
 
 				include_once($path);
 
-				list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+				list($username, $mail, $login_attr, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
 				if(!$found) {
 
