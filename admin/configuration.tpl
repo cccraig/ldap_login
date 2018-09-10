@@ -92,6 +92,10 @@ label
 			<input class="nice" size="70" type="text" id="group_basedn" name="GROUP_BASEDN" value="{$GROUP_BASEDN}" />
 		</li>
 		<li>
+			<label style="width:500px;" for="user_primary_groupid">{'User attribute which holds to the id of the primary group (e.g.: primarygroupid)'|@translate}</label><br></br>
+			<input class="nice" size="70" type="text" id="user_primary_groupid" name="USER_PRIMARY_GROUPID" value="{$USER_PRIMARY_GROUPID}" />
+		</li>
+		<li>
 			<label style="width:500px;" for="groupid_attr">{'Attribute corresponding to the group id (e.g.: cn)'|@translate}</label><br></br>
 			<input class="nice" size="70" type="text" id="groupid_attr" name="GROUPID_ATTR" value="{$GROUPID_ATTR}" />
 		</li>

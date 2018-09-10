@@ -89,7 +89,7 @@ class Ldap extends adLDAP {
 				'department',
 				'displayname',
 				'telephonenumber',
-				'primarygroupid',
+				$this->config['user_primary_groupid'],
 				'objectsid',
 				$this->config['login_attr'],
 				$this->config['username_attr'],
@@ -212,6 +212,15 @@ class Ldap extends adLDAP {
 				return $entry[$groupid_attr][0];
 			}, $result
 		);
+
+		if ($this->config['user_primary_groupid'] && $info[$this->config['user_primary_groupid']]) {
+			$query = ldap_search($this->_conn, $this->config['group_base_dn'], 'gidnumber='.$info[$this->config['user_primary_groupid']][0], array($groupid_attr));
+			$r = ldap_get_entries($this->_conn, $query);
+
+			if (sizeof($r)) {
+				$result[] = $r[0][$groupid_attr][0];
+			}
+		}
 
 		return $result;
 	}

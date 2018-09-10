@@ -111,6 +111,7 @@ if (isset($_POST['save'])) {
 	$config['username_attr'] = $_POST['USERNAME_ATTR'];
         $config['use_memberof'] = isset($_POST['USE_MEMBEROF']);
 	$config['group_base_dn'] = $_POST['GROUP_BASEDN'];
+	$config['user_primary_groupid'] = $_POST['USER_PRIMARY_GROUPID'];
 	$config['groupid_attr'] = $_POST['GROUPID_ATTR'];
         $config['group_user_attr'] = $_POST['GROUP_USER_ATTR'];
         $config['group_use_fulldn'] = isset($_POST['GROUP_USE_FULLDN']);
@@ -160,6 +161,7 @@ $template->assign('LOGIN_ATTR',	array_key_exists('login_attr', $config) ? $confi
 $template->assign('USERNAME_ATTR',    array_key_exists('username_attr', $config) ? $config['username_attr'] : 'cn');
 $template->assign('USE_MEMBEROF', array_key_exists('use_memberof', $config) ? $config['use_memberof'] : true);
 $template->assign('GROUP_BASEDN', array_key_exists('group_base_dn', $config) ? $config['group_base_dn'] : '');
+$template->assign('USER_PRIMARY_GROUPID', array_key_exists('user_primary_groupid', $config) ? $config['user_primary_groupid'] : 'primarygroupid');
 $template->assign('GROUPID_ATTR', array_key_exists('groupid_attr', $config) ? $config['groupid_attr'] : 'cn');
 $template->assign('GROUP_USER_ATTR', array_key_exists('group_user_attr', $config) ? $config['group_user_attr'] : 'memberuid');
 $template->assign('GROUP_USE_FULLDN', array_key_exists('group_use_fulldn', $config) ? $config['group_use_fulldn'] : false);
