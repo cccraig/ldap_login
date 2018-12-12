@@ -8,7 +8,7 @@ function map_ldap_groups($ldap, $info, $id) {
 	$uid = pwg_db_real_escape_string($id);
 
 	// Get user groups and serialize
-	$groups = serialize($info[0]['memberof']);
+	$groups = $info[0]['memberof'];
 
 	// Get group mappings
 	$mapping = $ldap -> config['group_mapping'];
@@ -20,12 +20,13 @@ function map_ldap_groups($ldap, $info, $id) {
 		// Loop through each LDAP group
 		foreach ($lg as $i => $v) {
 
+
 			// Is the user in this group?
-			$test = strpos($groups, $v);
+			$test = in_array($v, $groups);
 
 			if($test == False) {
 
-				$removals[] = $uid;
+				$removals[] = $key;
 
 			} else {
 

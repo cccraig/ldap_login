@@ -88,7 +88,7 @@ function login($success, $username, $password, $remember_me){
   $path = rtrim(LDAP_LOGIN_PATH, '/') . '/include/check_cn_or_mail.php';
 	include_once($path);
 
-	list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+	list($username, $mail, $login_attr, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
 	if(!$found) {
 		trigger_notify('login_failure', stripslashes($username));
@@ -96,7 +96,7 @@ function login($success, $username, $password, $remember_me){
 	}
 
 	// Try to authenticate the user through LDAP
-	$auth = $ldap -> authenticate2($mail, $password);
+	$auth = $ldap -> authenticate2($login_attr, $password);
 
 	if ($auth) {
 		// SQL query to find user in piwigo database

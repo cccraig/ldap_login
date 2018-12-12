@@ -69,11 +69,12 @@ function test_ldap_user($username, $password) {
 
 			include_once(LDAP_LOGIN_PATH.'/include/check_cn_or_mail.php');
 
-			list($username, $mail, $info, $found) = test_for_cn_or_mail($ldap, $username);
+			list($username, $mail, $login_attr, $info, $found) = test_for_cn_or_mail($ldap, $username);
 
 			if($found) {
 
-				$x = $ldap -> authenticate2($mail, $password);
+
+				$x = $ldap -> authenticate2($login_attr, $password);
 
 			} else {
 
@@ -106,6 +107,14 @@ if (isset($_POST['save'])) {
   $config = $ldap->config;
 	$config['account_suffix'] = $_POST['HOST'];
 	$config['base_dn'] = $_POST['BASEDN'];
+	$config['login_attr'] = $_POST['LOGIN_ATTR'];
+	$config['username_attr'] = $_POST['USERNAME_ATTR'];
+        $config['use_memberof'] = isset($_POST['USE_MEMBEROF']);
+	$config['group_base_dn'] = $_POST['GROUP_BASEDN'];
+	$config['user_primary_groupid'] = $_POST['USER_PRIMARY_GROUPID'];
+	$config['groupid_attr'] = $_POST['GROUPID_ATTR'];
+        $config['group_user_attr'] = $_POST['GROUP_USER_ATTR'];
+        $config['group_use_fulldn'] = isset($_POST['GROUP_USE_FULLDN']);
 	$config['domain_controllers'] = array($_POST['DOMAIN_CONTROLLER']);
 	$config['ad_username'] = $_POST['LD_BINDDN'];
 	$config['ad_password'] = $_POST['LD_BINDPW'];
@@ -148,6 +157,14 @@ if (isset($_POST['check_ldap'])){
  */
 $template->assign('HOST', 	$config['account_suffix']);
 $template->assign('BASEDN',	$config['base_dn']);
+$template->assign('LOGIN_ATTR',	array_key_exists('login_attr', $config) ? $config['login_attr'] : 'dn');
+$template->assign('USERNAME_ATTR',    array_key_exists('username_attr', $config) ? $config['username_attr'] : 'cn');
+$template->assign('USE_MEMBEROF', array_key_exists('use_memberof', $config) ? $config['use_memberof'] : true);
+$template->assign('GROUP_BASEDN', array_key_exists('group_base_dn', $config) ? $config['group_base_dn'] : '');
+$template->assign('USER_PRIMARY_GROUPID', array_key_exists('user_primary_groupid', $config) ? $config['user_primary_groupid'] : 'primarygroupid');
+$template->assign('GROUPID_ATTR', array_key_exists('groupid_attr', $config) ? $config['groupid_attr'] : 'cn');
+$template->assign('GROUP_USER_ATTR', array_key_exists('group_user_attr', $config) ? $config['group_user_attr'] : 'memberuid');
+$template->assign('GROUP_USE_FULLDN', array_key_exists('group_use_fulldn', $config) ? $config['group_use_fulldn'] : false);
 $template->assign('DOMAIN_CONTROLLER',	$config['domain_controllers'][0]);
 $template->assign('LD_USE_SSL',	$config['use_ssl']);
 $template->assign('LD_BINDPW',	$config['ad_password']);
